@@ -1,0 +1,205 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  font-family: Inter, "Segoe UI", sans-serif;
+  color: #e7ecff;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 2rem;
+  background:
+    radial-gradient(circle at 10% 20%, #25366c 0%, transparent 35%),
+    radial-gradient(circle at 90% 10%, #5e2b7f 0%, transparent 30%),
+    linear-gradient(160deg, #0e1426 0%, #141c33 45%, #0e1426 100%);
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.8rem;
+  color: #9bb0ff;
+  margin: 0 0 0.35rem;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.subtitle {
+  margin: 0.4rem 0 0;
+  color: #c3cff8;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.panel-3d {
+  background: linear-gradient(145deg, #1a2447, #121a35);
+  border: 1px solid #33406c;
+  border-radius: 16px;
+  box-shadow:
+    0 14px 25px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -8px 14px rgba(0, 0, 0, 0.2);
+}
+
+.card {
+  padding: 1rem;
+}
+
+.form-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.muted {
+  margin: 0;
+  color: #aebce8;
+  font-size: 0.9rem;
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: #cdd7fc;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid #3a4b80;
+  background: #0f1731;
+  color: #f4f6ff;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.check input {
+  width: auto;
+}
+
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #0d1733;
+  background: linear-gradient(140deg, #96a8ff, #6ff2de);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ghost {
+  background: transparent;
+  border: 1px solid #4d619f;
+  color: #d5defd;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.job-list {
+  margin-top: 0.75rem;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.job-item {
+  border: 1px solid #324272;
+  background: rgba(17, 25, 52, 0.8);
+  border-radius: 12px;
+  padding: 0.75rem;
+}
+
+.job-item h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.job-item p {
+  margin: 0.35rem 0;
+  color: #c5d2fa;
+  font-size: 0.9rem;
+}
+
+.meta {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.meta span {
+  border: 1px solid #415492;
+  border-radius: 999px;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  color: #dce5ff;
+}
+
+.health-chip {
+  border-radius: 999px;
+  border: 1px solid #6a4f7d;
+  background: rgba(95, 45, 112, 0.35);
+  color: #f2d8ff;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.8rem;
+}
+
+.health-chip.online {
+  border-color: #2f8f76;
+  background: rgba(18, 126, 105, 0.35);
+  color: #c9fff4;
+}
+
+.success {
+  color: #7df8c6;
+  margin: 0;
+}
+
+.error {
+  color: #ff9ca9;
+  margin: 0;
+}
+
+@media (max-width: 1080px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

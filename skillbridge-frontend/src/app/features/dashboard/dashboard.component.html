@@ -1,0 +1,116 @@
+<main class="page">
+  <header class="hero panel-3d">
+    <div>
+      <p class="eyebrow">Youth Career Platform</p>
+      <h1>{{ title }} Dashboard</h1>
+      <p class="subtitle">Backend-connected jobs dashboard with modern 3D UI.</p>
+    </div>
+    <div class="health-chip" [class.online]="health()?.status === 'ok'">
+      API: {{ health()?.status ?? 'offline' }}
+    </div>
+  </header>
+
+  <section class="grid">
+    <article class="panel-3d card form-card">
+      <h2>Post Job (Employer)</h2>
+      <p class="muted">Create jobs directly to backend API.</p>
+
+      <label>
+        Employer name
+        <input [(ngModel)]="form.employerName" placeholder="Acme Technologies" />
+      </label>
+
+      <label>
+        Employer email
+        <input [(ngModel)]="form.employerEmail" placeholder="hiring@acme.co.za" />
+      </label>
+
+      <label>
+        Job title
+        <input [(ngModel)]="form.title" placeholder="Junior Full Stack Developer" />
+      </label>
+
+      <label>
+        Job type
+        <select [(ngModel)]="form.type">
+          <option value="internship">Internship</option>
+          <option value="full-time">Full-time</option>
+          <option value="part-time">Part-time</option>
+          <option value="gig">Gig</option>
+        </select>
+      </label>
+
+      <label>
+        Location
+        <input [(ngModel)]="form.location" placeholder="Johannesburg" />
+      </label>
+
+      <label>
+        Description
+        <textarea [(ngModel)]="form.description" rows="4" placeholder="Role details and requirements"></textarea>
+      </label>
+
+      <label class="check">
+        <input type="checkbox" [(ngModel)]="form.isRemote" />
+        Remote position
+      </label>
+
+      <button type="button" (click)="createJob()" [disabled]="posting()">
+        {{ posting() ? 'Posting...' : 'Post Job' }}
+      </button>
+
+      @if (message()) {
+        <p class="success">{{ message() }}</p>
+      }
+      @if (error()) {
+        <p class="error">{{ error() }}</p>
+      }
+    </article>
+
+    <article class="panel-3d card">
+      <div class="section-head">
+        <h2>Public Jobs</h2>
+        <button type="button" class="ghost" (click)="loadJobs()">Refresh</button>
+      </div>
+      <p class="muted">Total: {{ totalJobs() }}</p>
+
+      @if (loading()) {
+        <p>Loading jobs...</p>
+      } @else if (!jobs().length) {
+        <p>No active jobs yet.</p>
+      } @else {
+        <div class="job-list">
+          @for (job of jobs(); track job.id) {
+            <article class="job-item">
+              <h3>{{ job.title }}</h3>
+              <p>{{ job.description }}</p>
+              <div class="meta">
+                <span>{{ job.type }}</span>
+                <span>{{ job.location || 'Location flexible' }}</span>
+                <span>{{ job.isRemote ? 'Remote' : 'On-site' }}</span>
+              </div>
+              <small>Posted by {{ job.employerName }}</small>
+            </article>
+          }
+        </div>
+      }
+    </article>
+
+    <article class="panel-3d card">
+      <h2>Employer Jobs</h2>
+      <p class="muted">Uses: <code>GET /api/jobs/employer/:id</code></p>
+      @if (!employerJobs().length) {
+        <p>No employer jobs loaded yet.</p>
+      } @else {
+        <div class="job-list small">
+          @for (job of employerJobs(); track job.id) {
+            <article class="job-item">
+              <h3>{{ job.title }}</h3>
+              <small>{{ job.createdAt | date: 'medium' }}</small>
+            </article>
+          }
+        </div>
+      }
+    </article>
+  </section>
+</main>
