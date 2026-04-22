@@ -1,3 +1,5 @@
+This Project is fully Owned By Dilligent Dev.Co
+
 # SkillBridge
 
 Clean, professional backend-first starter for the SkillBridge platform:
