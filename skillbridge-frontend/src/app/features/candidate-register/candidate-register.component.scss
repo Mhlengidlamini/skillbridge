@@ -1,0 +1,120 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  font-family: Inter, "Segoe UI", sans-serif;
+}
+
+.register-page {
+  min-height: 100vh;
+  padding: 2rem;
+  background:
+    radial-gradient(circle at 10% 20%, #25366c 0%, transparent 35%),
+    radial-gradient(circle at 90% 10%, #5e2b7f 0%, transparent 30%),
+    linear-gradient(160deg, #0e1426 0%, #141c33 45%, #0e1426 100%);
+  color: #e9edff;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.link {
+  color: #c6d3ff;
+  text-decoration: none;
+  border: 1px solid #44558f;
+  padding: 0.45rem 0.7rem;
+  border-radius: 8px;
+}
+
+.wizard-card {
+  max-width: 760px;
+  margin: 0 auto;
+  border: 1px solid #33406c;
+  border-radius: 18px;
+  padding: 1.25rem;
+  background: linear-gradient(145deg, #1a2447, #121a35);
+  box-shadow: 0 14px 25px rgba(0, 0, 0, 0.35);
+}
+
+h1 {
+  margin: 0;
+}
+
+.muted {
+  color: #aebce8;
+}
+
+.progress-wrap {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(140deg, #96a8ff, #6ff2de);
+  transition: width 0.2s ease;
+}
+
+.step-label {
+  font-size: 0.85rem;
+  color: #bad2f8;
+}
+
+.step-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+}
+
+input,
+textarea {
+  padding: 0.7rem 0.8rem;
+  border-radius: 10px;
+  border: 1px solid #3a4b80;
+  background: #0f1731;
+  color: #f4f6ff;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #0d1733;
+  background: linear-gradient(140deg, #96a8ff, #6ff2de);
+}
+
+.secondary {
+  background: transparent;
+  color: #d5defd;
+  border: 1px solid #4d619f;
+}
+
+.error {
+  color: #ff9ca9;
+}
+
+.success {
+  color: #7df8c6;
+}

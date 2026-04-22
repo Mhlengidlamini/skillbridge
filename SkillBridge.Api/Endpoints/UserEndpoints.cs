@@ -18,6 +18,11 @@ public static class UserEndpoints
 
         group.MapPost("/", async (CreateUserRequest request, AppDbContext db) =>
         {
+            if (string.IsNullOrWhiteSpace(request.FullName) || string.IsNullOrWhiteSpace(request.Email))
+            {
+                return Results.BadRequest(new { message = "Full name and email are required." });
+            }
+
             var exists = await db.Users.AnyAsync(x => x.Email == request.Email);
             if (exists)
             {
@@ -28,6 +33,11 @@ public static class UserEndpoints
             {
                 FullName = request.FullName.Trim(),
                 Email = request.Email.Trim().ToLowerInvariant(),
+                Phone = request.Phone?.Trim(),
+                Location = request.Location?.Trim(),
+                Bio = request.Bio?.Trim(),
+                Education = request.Education?.Trim(),
+                CareerGoal = request.CareerGoal?.Trim(),
                 Role = request.Role.Trim().ToLowerInvariant()
             };
 
@@ -41,4 +51,12 @@ public static class UserEndpoints
     }
 }
 
-public sealed record CreateUserRequest(string FullName, string Email, string Role = "youth");
+public sealed record CreateUserRequest(
+    string FullName,
+    string Email,
+    string? Phone,
+    string? Location,
+    string? Bio,
+    string? Education,
+    string? CareerGoal,
+    string Role = "youth");

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CreateJobRequest, Job } from '../models/job.model';
 import { HealthStatus } from '../models/health.model';
+import { CandidateRegistrationRequest, UserProfile } from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -26,5 +27,9 @@ export class ApiService {
 
   createJob(payload: CreateJobRequest): Observable<Job> {
     return this.http.post<Job>(`${this.baseUrl}/jobs`, payload);
+  }
+
+  registerCandidate(payload: CandidateRegistrationRequest): Observable<UserProfile> {
+    return this.http.post<UserProfile>(`${this.baseUrl}/users`, payload);
   }
 }
