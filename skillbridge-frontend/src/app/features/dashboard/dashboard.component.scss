@@ -198,6 +198,18 @@ button:disabled {
   margin: 0;
 }
 
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid #324272;
+  margin: 0.5rem 0;
+}
+
 @media (max-width: 1080px) {
   .grid {
     grid-template-columns: 1fr;

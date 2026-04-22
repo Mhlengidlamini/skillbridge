@@ -18,6 +18,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(x => x.Email).HasMaxLength(160).IsRequired();
             entity.HasIndex(x => x.Email).IsUnique();
             entity.Property(x => x.Role).HasMaxLength(30).IsRequired();
+            entity.Property(x => x.PasswordHash).HasMaxLength(500);
             entity.Property(x => x.CreatedAt).HasDefaultValueSql("NOW()");
         });
 

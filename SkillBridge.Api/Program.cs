@@ -1,4 +1,7 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SkillBridge.Api.Data;
 using SkillBridge.Api.Endpoints;
 using SkillBridge.Api.Services;
@@ -9,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddSingleton<JwtTokenService>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddCors(options =>
 {
@@ -16,6 +20,32 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("http://localhost:4200")
             .AllowAnyHeader()
             .AllowAnyMethod());
+});
+
+var jwtKey = builder.Configuration["Jwt:SigningKey"]
+    ?? throw new InvalidOperationException("Jwt:SigningKey is not configured.");
+var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = signingKey,
+            ClockSkew = TimeSpan.FromMinutes(1)
+        };
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("EmployerOrAdmin", policy =>
+        policy.RequireClaim(System.Security.Claims.ClaimTypes.Role, "employer", "admin"));
 });
 
 builder.Services.AddEndpointsApiExplorer();
@@ -30,6 +60,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("Frontend");
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapGet("/", () => Results.Redirect("/swagger"))
     .WithName("Root")
@@ -44,6 +76,7 @@ app.MapGet("/api/health", () => Results.Ok(new
 .WithName("HealthCheck")
 .WithSummary("Health check endpoint");
 
+app.MapAuthEndpoints();
 app.MapUserEndpoints();
 app.MapJobEndpoints();
 

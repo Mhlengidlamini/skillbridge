@@ -13,8 +13,6 @@ export interface Job {
 }
 
 export interface CreateJobRequest {
-  employerName: string;
-  employerEmail: string;
   title: string;
   description: string;
   type: string;

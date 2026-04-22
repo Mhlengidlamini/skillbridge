@@ -12,18 +12,41 @@
 
   <section class="grid">
     <article class="panel-3d card form-card">
-      <h2>Post Job (Employer)</h2>
-      <p class="muted">Create jobs directly to backend API.</p>
+      <h2>Employer access</h2>
+      <p class="muted">Register or sign in to post jobs. Identity comes from your token — not the job form.</p>
 
-      <label>
-        Employer name
-        <input [(ngModel)]="form.employerName" placeholder="Acme Technologies" />
-      </label>
+      @if (isAuthenticated()) {
+        <p class="success">
+          Signed in as <strong>{{ currentUser()?.fullName }}</strong> ({{ currentUser()?.email }})
+        </p>
+        <button type="button" class="ghost" (click)="logout()">Sign out</button>
+      } @else {
+        <label>
+          Full name (register only)
+          <input [(ngModel)]="authForm.fullName" placeholder="Acme HR" />
+        </label>
+        <label>
+          Email
+          <input [(ngModel)]="authForm.email" type="email" placeholder="hiring@acme.co.za" />
+        </label>
+        <label>
+          Password (min 8 characters)
+          <input [(ngModel)]="authForm.password" type="password" autocomplete="current-password" />
+        </label>
+        <div class="row">
+          <button type="button" (click)="registerEmployer()" [disabled]="authBusy()">
+            {{ authBusy() ? 'Please wait…' : 'Register employer' }}
+          </button>
+          <button type="button" class="ghost" (click)="loginEmployer()" [disabled]="authBusy()">
+            Sign in
+          </button>
+        </div>
+      }
 
-      <label>
-        Employer email
-        <input [(ngModel)]="form.employerEmail" placeholder="hiring@acme.co.za" />
-      </label>
+      <hr class="divider" />
+
+      <h2>Post job</h2>
+      <p class="muted">Requires employer sign-in. Job is linked to your account automatically.</p>
 
       <label>
         Job title
@@ -97,10 +120,12 @@
     </article>
 
     <article class="panel-3d card">
-      <h2>Employer Jobs</h2>
-      <p class="muted">Uses: <code>GET /api/jobs/employer/:id</code></p>
-      @if (!employerJobs().length) {
-        <p>No employer jobs loaded yet.</p>
+      <h2>Your posted jobs</h2>
+      <p class="muted">Uses <code>GET /api/jobs/employer/:id</code> (token must match employer).</p>
+      @if (!isAuthenticated()) {
+        <p>Sign in to load your jobs.</p>
+      } @else if (!employerJobs().length) {
+        <p>No jobs loaded yet.</p>
       } @else {
         <div class="job-list small">
           @for (job of employerJobs(); track job.id) {

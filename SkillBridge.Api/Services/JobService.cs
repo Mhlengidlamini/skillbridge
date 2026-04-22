@@ -37,31 +37,14 @@ public sealed class JobService(AppDbContext db) : IJobService
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<(bool Success, string? Error, JobResponse? Job)> CreateJobAsync(CreateJobRequest request, CancellationToken cancellationToken = default)
+    public async Task<(bool Success, string? Error, JobResponse? Job)> CreateJobAsync(CreateJobRequest request, Guid employerUserId, CancellationToken cancellationToken = default)
     {
-        var normalizedEmail = request.EmployerEmail.Trim().ToLowerInvariant();
-        var normalizedName = request.EmployerName.Trim();
-
-        if (string.IsNullOrWhiteSpace(normalizedEmail) || string.IsNullOrWhiteSpace(normalizedName))
-        {
-            return (false, "Employer name and email are required.", null);
-        }
-
         var employer = await db.Users
-            .FirstOrDefaultAsync(x => x.Email == normalizedEmail, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == employerUserId, cancellationToken);
 
         if (employer is null)
         {
-            employer = new User
-            {
-                FullName = normalizedName,
-                Email = normalizedEmail,
-                Role = "employer",
-                IsActive = true
-            };
-
-            db.Users.Add(employer);
-            await db.SaveChangesAsync(cancellationToken);
+            return (false, "Employer account not found.", null);
         }
 
         if (!string.Equals(employer.Role, "employer", StringComparison.OrdinalIgnoreCase) &&
