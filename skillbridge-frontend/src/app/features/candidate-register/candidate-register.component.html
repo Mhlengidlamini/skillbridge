@@ -1,0 +1,54 @@
+<main class="register-page">
+  <header class="topbar">
+    <a routerLink="/" class="link">Back to Landing</a>
+    <a routerLink="/dashboard" class="link">Dashboard</a>
+  </header>
+
+  <section class="wizard-card">
+    <h1>Candidate Registration Wizard</h1>
+    <p class="muted">Complete your profile in 3 short steps.</p>
+
+    <div class="progress-wrap">
+      <div class="progress-bar" [style.width]="progress()"></div>
+    </div>
+    <p class="step-label">Step {{ step() }} of 3</p>
+
+    @if (step() === 1) {
+      <div class="step-grid">
+        <label>Full name<input [(ngModel)]="form.fullName" placeholder="Your full name" /></label>
+        <label>Email<input [(ngModel)]="form.email" placeholder="you@example.com" /></label>
+        <label>Phone<input [(ngModel)]="form.phone" placeholder="+27 ..." /></label>
+        <label>Location<input [(ngModel)]="form.location" placeholder="Johannesburg" /></label>
+      </div>
+    }
+
+    @if (step() === 2) {
+      <div class="step-grid">
+        <label>Education<input [(ngModel)]="form.education" placeholder="Diploma in IT" /></label>
+        <label>Career goal<input [(ngModel)]="form.careerGoal" placeholder="Junior Full Stack Developer" /></label>
+      </div>
+    }
+
+    @if (step() === 3) {
+      <div class="step-grid">
+        <label>Professional bio
+          <textarea [(ngModel)]="form.bio" rows="6" placeholder="Tell employers about your strengths, projects, and interests."></textarea>
+        </label>
+      </div>
+    }
+
+    @if (error()) { <p class="error">{{ error() }}</p> }
+    @if (success()) { <p class="success">{{ success() }}</p> }
+
+    <div class="actions">
+      <button type="button" class="secondary" (click)="prevStep()" [disabled]="step() === 1">Previous</button>
+      @if (step() < 3) {
+        <button type="button" (click)="nextStep()">Next</button>
+      } @else {
+        <button type="button" (click)="submit()" [disabled]="submitting()">
+          {{ submitting() ? 'Submitting...' : 'Complete Registration' }}
+        </button>
+      }
+    </div>
+  </section>
+</main>
