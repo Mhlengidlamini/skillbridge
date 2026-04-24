@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using SkillBridge.Api.Contracts.Users;
 using SkillBridge.Api.Data;
 using SkillBridge.Api.Models;
+using SkillBridge.Api.Validation;
 
 namespace SkillBridge.Api.Endpoints;
 
@@ -9,7 +11,8 @@ public static class UserEndpoints
     public static IEndpointRouteBuilder MapUserEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/api/users")
-            .WithTags("Users");
+            .WithTags("Users")
+            .WithRequestValidation();
 
         group.MapGet("/", async (AppDbContext db) =>
             await db.Users
@@ -18,11 +21,6 @@ public static class UserEndpoints
 
         group.MapPost("/", async (CreateUserRequest request, AppDbContext db) =>
         {
-            if (string.IsNullOrWhiteSpace(request.FullName) || string.IsNullOrWhiteSpace(request.Email))
-            {
-                return Results.BadRequest(new { message = "Full name and email are required." });
-            }
-
             var exists = await db.Users.AnyAsync(x => x.Email == request.Email);
             if (exists)
             {
@@ -50,13 +48,3 @@ public static class UserEndpoints
         return app;
     }
 }
-
-public sealed record CreateUserRequest(
-    string FullName,
-    string Email,
-    string? Phone,
-    string? Location,
-    string? Bio,
-    string? Education,
-    string? CareerGoal,
-    string Role = "youth");

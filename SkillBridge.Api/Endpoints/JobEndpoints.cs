@@ -1,5 +1,6 @@
 using SkillBridge.Api.Contracts.Jobs;
 using SkillBridge.Api.Services.Interfaces;
+using SkillBridge.Api.Validation;
 
 namespace SkillBridge.Api.Endpoints;
 
@@ -8,7 +9,8 @@ public static class JobEndpoints
     public static IEndpointRouteBuilder MapJobEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/api/jobs")
-            .WithTags("Jobs");
+            .WithTags("Jobs")
+            .WithRequestValidation();
 
         group.MapGet("/", async (IJobService jobService, bool activeOnly = true, CancellationToken cancellationToken = default) =>
         {
@@ -24,15 +26,6 @@ public static class JobEndpoints
 
         group.MapPost("/", async (CreateJobRequest request, IJobService jobService, CancellationToken cancellationToken = default) =>
         {
-            if (string.IsNullOrWhiteSpace(request.Title) ||
-                string.IsNullOrWhiteSpace(request.Description) ||
-                string.IsNullOrWhiteSpace(request.Type) ||
-                string.IsNullOrWhiteSpace(request.EmployerName) ||
-                string.IsNullOrWhiteSpace(request.EmployerEmail))
-            {
-                return Results.BadRequest(new { message = "Employer name, employer email, title, description and type are required." });
-            }
-
             var result = await jobService.CreateJobAsync(request, cancellationToken);
             if (!result.Success)
             {

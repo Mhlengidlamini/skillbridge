@@ -48,7 +48,9 @@ public sealed class JobService(AppDbContext db) : IJobService
         }
 
         var employer = await db.Users
-            .FirstOrDefaultAsync(x => x.Email == normalizedEmail, cancellationToken);
+            .FirstOrDefaultAsync(
+                x => x.Email == normalizedEmail || x.Email.ToLower() == normalizedEmail,
+                cancellationToken);
 
         if (employer is null)
         {

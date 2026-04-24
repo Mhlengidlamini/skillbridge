@@ -3,6 +3,7 @@ using SkillBridge.Api.Data;
 using SkillBridge.Api.Endpoints;
 using SkillBridge.Api.Services;
 using SkillBridge.Api.Services.Interfaces;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IJobService, JobService>();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Frontend", policy =>
@@ -50,7 +52,7 @@ app.MapJobEndpoints();
 await using (var scope = app.Services.CreateAsyncScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await db.Database.EnsureCreatedAsync();
+    await db.EnsureCompatibilityAsync();
 }
 
 app.Run();
