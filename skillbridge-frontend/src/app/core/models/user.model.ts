@@ -33,3 +33,23 @@ export interface UserProfile {
   isActive: boolean;
   createdAt: string;
 }
+
+export interface MentorConnectionRequest {
+  mentorId: string;
+  menteeName: string;
+  menteeEmail: string;
+  menteeGoal?: string;
+  message?: string;
+}
+
+export interface MentorConnection {
+  id: string;
+  mentorId: string;
+  mentorName: string;
+  menteeName: string;
+  menteeEmail: string;
+  menteeGoal?: string;
+  message?: string;
+  status: string;
+  requestedAt: string;
+}

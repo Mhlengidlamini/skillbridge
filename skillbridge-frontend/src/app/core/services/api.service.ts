@@ -4,7 +4,13 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CreateJobRequest, Job, JobMatchScoreRequest, JobMatchScoreResponse } from '../models/job.model';
 import { HealthStatus } from '../models/health.model';
-import { CandidateRegistrationRequest, UserProfile, UserRegistrationRequest } from '../models/user.model';
+import {
+  CandidateRegistrationRequest,
+  MentorConnection,
+  MentorConnectionRequest,
+  UserProfile,
+  UserRegistrationRequest
+} from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -43,5 +49,15 @@ export class ApiService {
 
   getMentors(): Observable<UserProfile[]> {
     return this.http.get<UserProfile[]>(`${this.baseUrl}/users/mentors`);
+  }
+
+  createMentorConnectionRequest(payload: MentorConnectionRequest): Observable<MentorConnection> {
+    return this.http.post<MentorConnection>(`${this.baseUrl}/mentor-connections`, payload);
+  }
+
+  getMenteeConnectionRequests(menteeEmail: string): Observable<MentorConnection[]> {
+    return this.http.get<MentorConnection[]>(`${this.baseUrl}/mentor-connections/mentee`, {
+      params: { menteeEmail }
+    });
   }
 }

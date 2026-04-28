@@ -10,6 +10,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IJobService, JobService>();
+builder.Services.AddScoped<IMentorConnectionService, MentorConnectionService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Frontend", policy =>
@@ -46,6 +47,7 @@ app.MapGet("/api/health", () => Results.Ok(new
 
 app.MapUserEndpoints();
 app.MapJobEndpoints();
+app.MapMentorConnectionEndpoints();
 
 await using (var scope = app.Services.CreateAsyncScope())
 {

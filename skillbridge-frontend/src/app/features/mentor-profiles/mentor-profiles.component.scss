@@ -178,6 +178,58 @@ button:disabled {
   color: #aebce8;
 }
 
+.actions-row {
+  margin: 0.5rem 0;
+}
+
+.connection-panel {
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid #2e3e6d;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.connection-panel h3,
+.request-list h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.request-grid {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.request-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.request-list {
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid #2e3e6d;
+}
+
+.request-cards {
+  margin-top: 0.65rem;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.request-card {
+  border: 1px solid #324272;
+  background: rgba(17, 25, 52, 0.62);
+  border-radius: 10px;
+  padding: 0.7rem;
+}
+
+.request-card h4 {
+  margin: 0 0 0.35rem;
+}
+
 .success {
   margin: 0;
   color: #7df8c6;

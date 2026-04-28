@@ -92,11 +92,85 @@
                 <span>{{ mentor.education || 'Expertise not specified' }}</span>
                 <span>{{ mentor.location || 'Remote / Flexible' }}</span>
               </div>
+              <div class="actions-row">
+                <button
+                  type="button"
+                  class="ghost"
+                  (click)="openConnectionRequest(mentor)"
+                  [disabled]="isMentorPending(mentor.id)"
+                >
+                  {{ isMentorPending(mentor.id) ? 'Request Pending' : 'Request Connection' }}
+                </button>
+              </div>
               <small>{{ mentor.email }} - Joined {{ mentor.createdAt | date: 'mediumDate' }}</small>
             </article>
           }
         </div>
       }
+
+      <section class="connection-panel">
+        <h3>Mentor-Mentee Connection Request</h3>
+        <p class="muted">Select a mentor card above, then submit a professional request.</p>
+
+        <div class="request-grid">
+          <label>
+            Selected mentor ID
+            <input [(ngModel)]="connectionForm.mentorId" placeholder="Select from mentor cards" />
+          </label>
+          <label>
+            Your full name
+            <input [(ngModel)]="connectionForm.menteeName" placeholder="Lerato Khumalo" />
+          </label>
+          <label>
+            Your email
+            <input [(ngModel)]="connectionForm.menteeEmail" placeholder="lerato@email.com" />
+          </label>
+          <label>
+            Learning goal
+            <input [(ngModel)]="connectionForm.menteeGoal" placeholder="Prepare for backend developer interviews" />
+          </label>
+          <label>
+            Message to mentor
+            <textarea
+              [(ngModel)]="connectionForm.message"
+              rows="4"
+              placeholder="I admire your expertise and would value mentorship on building production-ready APIs."
+            ></textarea>
+          </label>
+        </div>
+
+        <div class="request-actions">
+          <button type="button" (click)="submitConnectionRequest()" [disabled]="connecting()">
+            {{ connecting() ? 'Sending...' : 'Send Request' }}
+          </button>
+          <button type="button" class="ghost" (click)="loadMyRequests()">Load My Requests</button>
+          <button type="button" class="ghost" (click)="cancelConnectionRequest()">Clear Selection</button>
+        </div>
+      </section>
+
+      @if (requestSuccess()) {
+        <p class="success">{{ requestSuccess() }}</p>
+      }
+
+      <section class="request-list">
+        <h3>My Connection Requests</h3>
+        @if (!requests().length) {
+          <p class="muted">No requests loaded yet.</p>
+        } @else {
+          <div class="request-cards">
+            @for (request of requests(); track request.id) {
+              <article class="request-card">
+                <h4>{{ request.mentorName }}</h4>
+                <p>{{ request.message || 'No custom message provided.' }}</p>
+                <div class="meta">
+                  <span>{{ request.status }}</span>
+                  <span>{{ request.requestedAt | date: 'medium' }}</span>
+                </div>
+              </article>
+            }
+          </div>
+        }
+      </section>
     </article>
   </section>
 </main>
