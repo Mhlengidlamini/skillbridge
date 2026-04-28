@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { CreateJobRequest, Job } from '../models/job.model';
+import { CreateJobRequest, Job, JobMatchScoreRequest, JobMatchScoreResponse } from '../models/job.model';
 import { HealthStatus } from '../models/health.model';
 import { CandidateRegistrationRequest, UserProfile } from '../models/user.model';
 
@@ -27,6 +27,10 @@ export class ApiService {
 
   createJob(payload: CreateJobRequest): Observable<Job> {
     return this.http.post<Job>(`${this.baseUrl}/jobs`, payload);
+  }
+
+  getJobMatchScore(jobId: string, payload: JobMatchScoreRequest): Observable<JobMatchScoreResponse> {
+    return this.http.post<JobMatchScoreResponse>(`${this.baseUrl}/jobs/${jobId}/match-score`, payload);
   }
 
   registerCandidate(payload: CandidateRegistrationRequest): Observable<UserProfile> {
