@@ -7,6 +7,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 {
     public DbSet<User> Users => Set<User>();
     public DbSet<Job> Jobs => Set<Job>();
+    public DbSet<MentorConnection> MentorConnections => Set<MentorConnection>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -39,6 +40,24 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .HasForeignKey(x => x.EmployerId)
                 .OnDelete(DeleteBehavior.Cascade);
             entity.HasIndex(x => new { x.IsActive, x.CreatedAt });
+        });
+
+        modelBuilder.Entity<MentorConnection>(entity =>
+        {
+            entity.ToTable("mentor_connections");
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.MenteeName).HasMaxLength(120).IsRequired();
+            entity.Property(x => x.MenteeEmail).HasMaxLength(160).IsRequired();
+            entity.Property(x => x.MenteeGoal).HasMaxLength(300);
+            entity.Property(x => x.Message).HasMaxLength(1200);
+            entity.Property(x => x.Status).HasMaxLength(30).IsRequired();
+            entity.Property(x => x.RequestedAt).HasDefaultValueSql("NOW()");
+            entity.HasOne(x => x.Mentor)
+                .WithMany(x => x.MentorRequests)
+                .HasForeignKey(x => x.MentorId)
+                .OnDelete(DeleteBehavior.Cascade);
+            entity.HasIndex(x => new { x.MentorId, x.MenteeEmail, x.Status });
+            entity.HasIndex(x => new { x.MenteeEmail, x.RequestedAt });
         });
     }
 }

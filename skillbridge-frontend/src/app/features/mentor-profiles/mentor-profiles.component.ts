@@ -3,7 +3,7 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ApiService } from '../../core/services/api.service';
-import { UserProfile } from '../../core/models/user.model';
+import { MentorConnection, UserProfile } from '../../core/models/user.model';
 
 @Component({
   selector: 'app-mentor-profiles',
@@ -16,9 +16,12 @@ export class MentorProfilesComponent implements OnInit {
 
   protected readonly loading = signal(false);
   protected readonly submitting = signal(false);
+  protected readonly connecting = signal(false);
   protected readonly success = signal('');
+  protected readonly requestSuccess = signal('');
   protected readonly error = signal('');
   protected readonly mentors = signal<UserProfile[]>([]);
+  protected readonly requests = signal<MentorConnection[]>([]);
 
   protected readonly filters = {
     keyword: '',
@@ -33,6 +36,14 @@ export class MentorProfilesComponent implements OnInit {
     expertise: '',
     industry: '',
     bio: ''
+  };
+
+  protected readonly connectionForm = {
+    mentorId: '',
+    menteeName: '',
+    menteeEmail: '',
+    menteeGoal: '',
+    message: ''
   };
 
   protected readonly filteredMentors = computed(() => {
@@ -69,8 +80,20 @@ export class MentorProfilesComponent implements OnInit {
     });
   }
 
+  protected openConnectionRequest(mentor: UserProfile): void {
+    this.requestSuccess.set('');
+    this.error.set('');
+    this.connectionForm.mentorId = mentor.id;
+  }
+
+  protected cancelConnectionRequest(): void {
+    this.connectionForm.mentorId = '';
+    this.requestSuccess.set('');
+  }
+
   protected submitMentorProfile(): void {
     this.success.set('');
+    this.requestSuccess.set('');
     this.error.set('');
 
     if (!this.form.fullName.trim() || !this.form.email.trim() || !this.form.expertise.trim()) {
@@ -109,5 +132,59 @@ export class MentorProfilesComponent implements OnInit {
           this.error.set(err?.error?.message ?? 'Unable to create mentor profile.');
         }
       });
+  }
+
+  protected submitConnectionRequest(): void {
+    this.requestSuccess.set('');
+    this.error.set('');
+
+    if (
+      !this.connectionForm.mentorId ||
+      !this.connectionForm.menteeName.trim() ||
+      !this.connectionForm.menteeEmail.trim()
+    ) {
+      this.error.set('Select a mentor and provide your name and email.');
+      return;
+    }
+
+    this.connecting.set(true);
+    this.api
+      .createMentorConnectionRequest({
+        mentorId: this.connectionForm.mentorId,
+        menteeName: this.connectionForm.menteeName.trim(),
+        menteeEmail: this.connectionForm.menteeEmail.trim(),
+        menteeGoal: this.connectionForm.menteeGoal.trim() || undefined,
+        message: this.connectionForm.message.trim() || undefined
+      })
+      .subscribe({
+        next: () => {
+          this.connecting.set(false);
+          this.requestSuccess.set('Connection request sent successfully.');
+          this.loadMyRequests();
+          this.connectionForm.mentorId = '';
+          this.connectionForm.message = '';
+        },
+        error: (err) => {
+          this.connecting.set(false);
+          this.error.set(err?.error?.message ?? 'Unable to send request.');
+        }
+      });
+  }
+
+  protected loadMyRequests(): void {
+    const email = this.connectionForm.menteeEmail.trim();
+    if (!email) {
+      this.error.set('Add your mentee email to load your requests.');
+      return;
+    }
+
+    this.api.getMenteeConnectionRequests(email).subscribe({
+      next: (requests) => this.requests.set(requests),
+      error: () => this.error.set('Unable to load your connection requests.')
+    });
+  }
+
+  protected isMentorPending(mentorId: string): boolean {
+    return this.requests().some((x) => x.mentorId === mentorId && x.status === 'pending');
   }
 }

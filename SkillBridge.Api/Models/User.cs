@@ -15,4 +15,5 @@ public class User
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public ICollection<Job> PostedJobs { get; set; } = new List<Job>();
+    public ICollection<MentorConnection> MentorRequests { get; set; } = new List<MentorConnection>();
 }
