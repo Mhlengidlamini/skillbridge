@@ -7,4 +7,5 @@ public interface IJobService
     Task<IReadOnlyList<JobResponse>> GetPublicJobsAsync(bool activeOnly, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<JobResponse>> GetEmployerJobsAsync(Guid employerId, CancellationToken cancellationToken = default);
     Task<(bool Success, string? Error, JobResponse? Job)> CreateJobAsync(CreateJobRequest request, CancellationToken cancellationToken = default);
+    Task<JobMatchScoreResponse?> GetJobMatchScoreAsync(Guid jobId, JobMatchScoreRequest request, CancellationToken cancellationToken = default);
 }

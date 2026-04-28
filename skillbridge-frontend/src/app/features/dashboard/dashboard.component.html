@@ -74,6 +74,28 @@
       </div>
       <p class="muted">Total: {{ totalJobs() }}</p>
 
+      <div class="match-panel">
+        <h3>AI Job Match</h3>
+        <label>
+          Candidate skills (comma separated)
+          <input [(ngModel)]="candidateProfile.skills" placeholder="Angular, C#, SQL, communication" />
+        </label>
+        <label>
+          Target role
+          <input [(ngModel)]="candidateProfile.targetRole" placeholder="Junior Full Stack Developer" />
+        </label>
+        <label>
+          Preferred location
+          <input [(ngModel)]="candidateProfile.preferredLocation" placeholder="Johannesburg or Remote" />
+        </label>
+        <button type="button" (click)="generateMatchScores()" [disabled]="scoring() || loading()">
+          {{ scoring() ? 'Scoring...' : 'Generate Match Badges' }}
+        </button>
+        @if (matchSummary()) {
+          <p class="success">{{ matchSummary() }}</p>
+        }
+      </div>
+
       @if (loading()) {
         <p>Loading jobs...</p>
       } @else if (!jobs().length) {
@@ -82,7 +104,12 @@
         <div class="job-list">
           @for (job of jobs(); track job.id) {
             <article class="job-item">
-              <h3>{{ job.title }}</h3>
+              <div class="job-head">
+                <h3>{{ job.title }}</h3>
+                <span class="score-badge" [ngClass]="scoreBadgeClass(scoreFor(job.id))">
+                  {{ scoreFor(job.id) === null ? 'Match: --' : `Match: ${scoreFor(job.id)}%` }}
+                </span>
+              </div>
               <p>{{ job.description }}</p>
               <div class="meta">
                 <span>{{ job.type }}</span>
