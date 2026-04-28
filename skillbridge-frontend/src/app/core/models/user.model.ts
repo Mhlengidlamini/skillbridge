@@ -9,6 +9,17 @@ export interface CandidateRegistrationRequest {
   role: 'youth';
 }
 
+export interface UserRegistrationRequest {
+  fullName: string;
+  email: string;
+  phone?: string;
+  location?: string;
+  bio?: string;
+  education?: string;
+  careerGoal?: string;
+  role: 'youth' | 'mentor' | 'employer' | 'admin';
+}
+
 export interface UserProfile {
   id: string;
   fullName: string;

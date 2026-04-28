@@ -16,6 +16,12 @@ public static class UserEndpoints
                 .OrderByDescending(x => x.CreatedAt)
                 .ToListAsync());
 
+        group.MapGet("/mentors", async (AppDbContext db) =>
+            await db.Users
+                .Where(x => x.Role == "mentor" && x.IsActive)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync());
+
         group.MapPost("/", async (CreateUserRequest request, AppDbContext db) =>
         {
             if (string.IsNullOrWhiteSpace(request.FullName) || string.IsNullOrWhiteSpace(request.Email))

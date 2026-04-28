@@ -1,0 +1,102 @@
+<main class="page">
+  <header class="hero panel-3d">
+    <div>
+      <p class="eyebrow">SB-016</p>
+      <h1>Mentor Network</h1>
+      <p class="subtitle">Onboard mentor profiles and browse available mentors.</p>
+    </div>
+    <a routerLink="/" class="back-link">Back to Home</a>
+  </header>
+
+  <section class="layout">
+    <article class="panel-3d card form-card">
+      <h2>Mentor Onboarding</h2>
+      <p class="muted">Create a mentor profile for learners to discover.</p>
+
+      <label>
+        Full name
+        <input [(ngModel)]="form.fullName" placeholder="Thabo Mokoena" />
+      </label>
+
+      <label>
+        Email
+        <input [(ngModel)]="form.email" placeholder="mentor@skillbridge.co.za" />
+      </label>
+
+      <label>
+        Phone
+        <input [(ngModel)]="form.phone" placeholder="+27 71 234 5678" />
+      </label>
+
+      <label>
+        Location
+        <input [(ngModel)]="form.location" placeholder="Cape Town" />
+      </label>
+
+      <label>
+        Expertise
+        <input [(ngModel)]="form.expertise" placeholder="Backend Engineering, Cloud, APIs" />
+      </label>
+
+      <label>
+        Industry focus
+        <input [(ngModel)]="form.industry" placeholder="FinTech, HealthTech" />
+      </label>
+
+      <label>
+        Mentor bio
+        <textarea [(ngModel)]="form.bio" rows="4" placeholder="I mentor graduates on portfolio quality and interview readiness."></textarea>
+      </label>
+
+      <button type="button" (click)="submitMentorProfile()" [disabled]="submitting()">
+        {{ submitting() ? 'Saving...' : 'Create Mentor Profile' }}
+      </button>
+
+      @if (success()) {
+        <p class="success">{{ success() }}</p>
+      }
+      @if (error()) {
+        <p class="error">{{ error() }}</p>
+      }
+    </article>
+
+    <article class="panel-3d card">
+      <div class="section-head">
+        <h2>Browse Mentors</h2>
+        <button type="button" class="ghost" (click)="loadMentors()">Refresh</button>
+      </div>
+
+      <div class="filters">
+        <label>
+          Search keyword
+          <input [(ngModel)]="filters.keyword" placeholder="cloud, frontend, interview..." />
+        </label>
+        <label>
+          Location
+          <input [(ngModel)]="filters.location" placeholder="Johannesburg" />
+        </label>
+      </div>
+
+      @if (loading()) {
+        <p class="muted">Loading mentors...</p>
+      } @else if (!filteredMentors().length) {
+        <p class="muted">No mentors found for the current filter.</p>
+      } @else {
+        <div class="mentor-list">
+          @for (mentor of filteredMentors(); track mentor.id) {
+            <article class="mentor-card">
+              <h3>{{ mentor.fullName }}</h3>
+              <p class="tagline">{{ mentor.careerGoal || 'General mentorship' }}</p>
+              <p>{{ mentor.bio || 'Mentor profile is ready for connection requests.' }}</p>
+              <div class="meta">
+                <span>{{ mentor.education || 'Expertise not specified' }}</span>
+                <span>{{ mentor.location || 'Remote / Flexible' }}</span>
+              </div>
+              <small>{{ mentor.email }} - Joined {{ mentor.createdAt | date: 'mediumDate' }}</small>
+            </article>
+          }
+        </div>
+      }
+    </article>
+  </section>
+</main>
