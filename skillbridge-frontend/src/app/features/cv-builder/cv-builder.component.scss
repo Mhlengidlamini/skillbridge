@@ -1,0 +1,172 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  font-family: Inter, "Segoe UI", sans-serif;
+  color: #e7ecff;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 2rem;
+  background:
+    radial-gradient(circle at 10% 20%, #25366c 0%, transparent 35%),
+    radial-gradient(circle at 90% 10%, #5e2b7f 0%, transparent 30%),
+    linear-gradient(160deg, #0e1426 0%, #141c33 45%, #0e1426 100%);
+}
+
+.panel-3d {
+  background: linear-gradient(145deg, #1a2447, #121a35);
+  border: 1px solid #33406c;
+  border-radius: 16px;
+  box-shadow:
+    0 14px 25px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -8px 14px rgba(0, 0, 0, 0.2);
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9bb0ff;
+}
+
+h1 {
+  margin: 0;
+}
+
+.subtitle {
+  margin: 0.4rem 0 0;
+  color: #c3cff8;
+}
+
+.back-link {
+  color: #dce5ff;
+  text-decoration: none;
+  border: 1px solid #5064a6;
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(340px, 1.2fr);
+  gap: 1rem;
+}
+
+.card {
+  padding: 1rem;
+}
+
+.form-card {
+  display: grid;
+  gap: 0.7rem;
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: #cdd7fc;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid #3a4b80;
+  background: #0f1731;
+  color: #f4f6ff;
+}
+
+textarea {
+  resize: vertical;
+}
+
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #0d1733;
+  background: linear-gradient(140deg, #96a8ff, #6ff2de);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ghost {
+  background: transparent;
+  border: 1px solid #4d619f;
+  color: #d5defd;
+}
+
+.preview-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.muted {
+  margin: 0;
+  color: #aebce8;
+}
+
+.error {
+  margin: 0;
+  color: #ff9ca9;
+}
+
+.cv-sheet {
+  background: #fff;
+  color: #111;
+  border-radius: 10px;
+  padding: 1.2rem;
+}
+
+.cv-header h3 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.cv-header p {
+  margin: 0.25rem 0;
+}
+
+.cv-section {
+  margin-top: 1rem;
+}
+
+.cv-section h4 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+}
+
+.cv-section h5 {
+  margin: 0.4rem 0;
+  font-size: 0.95rem;
+}
+
+.cv-section p,
+.cv-section ul {
+  margin: 0.2rem 0;
+}
+
+@media (max-width: 1000px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
