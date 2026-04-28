@@ -1,0 +1,123 @@
+<main class="page">
+  <header class="hero panel-3d">
+    <div>
+      <p class="eyebrow">SB-011</p>
+      <h1>AI CV Builder</h1>
+      <p class="subtitle">Generate a professional CV and export it to PDF.</p>
+    </div>
+    <a routerLink="/" class="back-link">Back to Home</a>
+  </header>
+
+  <section class="layout">
+    <article class="panel-3d card form-card">
+      <h2>Candidate Details</h2>
+
+      <label>
+        Full name
+        <input [(ngModel)]="form.fullName" placeholder="Nomsa Dlamini" />
+      </label>
+
+      <label>
+        Email
+        <input [(ngModel)]="form.email" placeholder="nomsa@email.com" />
+      </label>
+
+      <label>
+        Phone
+        <input [(ngModel)]="form.phone" placeholder="+27 71 234 5678" />
+      </label>
+
+      <label>
+        Location
+        <input [(ngModel)]="form.location" placeholder="Durban, South Africa" />
+      </label>
+
+      <label>
+        Target role
+        <input [(ngModel)]="form.targetRole" placeholder="Junior Frontend Developer" />
+      </label>
+
+      <label>
+        Skills (comma separated)
+        <input [(ngModel)]="form.skills" placeholder="Angular, TypeScript, UX, REST APIs" />
+      </label>
+
+      <label>
+        Experience (one line per item)
+        <textarea [(ngModel)]="form.experience" rows="4" placeholder="Built a student portal with Angular"></textarea>
+      </label>
+
+      <label>
+        Key achievements (one line per item)
+        <textarea [(ngModel)]="form.achievements" rows="3" placeholder="Improved app load time by 30%"></textarea>
+      </label>
+
+      <label>
+        Education
+        <textarea [(ngModel)]="form.education" rows="3" placeholder="Diploma in Information Technology, 2025"></textarea>
+      </label>
+
+      <button type="button" (click)="buildCvWithAi()" [disabled]="generating()">
+        {{ generating() ? 'Generating...' : 'Generate AI CV' }}
+      </button>
+
+      @if (error()) {
+        <p class="error">{{ error() }}</p>
+      }
+    </article>
+
+    <article class="panel-3d card preview-card">
+      <div class="preview-head">
+        <h2>CV Preview</h2>
+        <button type="button" class="ghost" (click)="exportToPdf()" [disabled]="!generatedCv() || exporting()">
+          {{ exporting() ? 'Exporting...' : 'Export to PDF' }}
+        </button>
+      </div>
+
+      @if (!generatedCv()) {
+        <p class="muted">Generate your CV to preview it here.</p>
+      } @else {
+        <section #cvPreview class="cv-sheet">
+          <header class="cv-header">
+            <h3>{{ generatedCv()!.fullName }}</h3>
+            <p>{{ generatedCv()!.targetRole }}</p>
+            <p>{{ generatedCv()!.email }} | {{ generatedCv()!.phone }} | {{ generatedCv()!.location }}</p>
+          </header>
+
+          <div class="cv-section">
+            <h4>Professional Summary</h4>
+            <p>{{ generatedCv()!.summary }}</p>
+          </div>
+
+          <div class="cv-section">
+            <h4>Skills</h4>
+            <ul>
+              @for (skill of generatedCv()!.skills; track skill) {
+                <li>{{ skill }}</li>
+              }
+            </ul>
+          </div>
+
+          <div class="cv-section">
+            <h4>Experience</h4>
+            @for (entry of generatedCv()!.experience; track entry.role) {
+              <article>
+                <h5>{{ entry.role }} - {{ entry.company }}</h5>
+                <ul>
+                  @for (item of entry.highlights; track item) {
+                    <li>{{ item }}</li>
+                  }
+                </ul>
+              </article>
+            }
+          </div>
+
+          <div class="cv-section">
+            <h4>Education</h4>
+            <p>{{ generatedCv()!.education }}</p>
+          </div>
+        </section>
+      }
+    </article>
+  </section>
+</main>

@@ -14,6 +14,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/candidate-register/candidate-register.component').then(m => m.CandidateRegisterComponent)
   },
   {
+    path: 'cv-builder',
+    loadComponent: () => import('./features/cv-builder/cv-builder.component').then(m => m.CvBuilderComponent)
+  },
+  {
     path: '**',
     redirectTo: ''
   }
