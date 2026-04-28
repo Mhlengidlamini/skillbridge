@@ -153,6 +153,60 @@ button:disabled {
   font-size: 1rem;
 }
 
+.job-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.match-panel {
+  margin-top: 0.85rem;
+  margin-bottom: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 12px;
+  border: 1px solid #324272;
+  background: rgba(17, 25, 52, 0.62);
+  display: grid;
+  gap: 0.5rem;
+}
+
+.match-panel h3 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.score-badge {
+  border-radius: 999px;
+  border: 1px solid #495e98;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.score-badge.pending {
+  color: #cad5ff;
+  background: rgba(74, 95, 157, 0.25);
+}
+
+.score-badge.low {
+  color: #ffd6de;
+  border-color: #9f4e61;
+  background: rgba(137, 44, 67, 0.25);
+}
+
+.score-badge.medium {
+  color: #ffe9bc;
+  border-color: #9e7d3d;
+  background: rgba(130, 89, 30, 0.27);
+}
+
+.score-badge.high {
+  color: #cbffed;
+  border-color: #2f8f76;
+  background: rgba(18, 126, 105, 0.35);
+}
+
 .job-item p {
   margin: 0.35rem 0;
   color: #c5d2fa;

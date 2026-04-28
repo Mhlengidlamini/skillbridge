@@ -42,6 +42,23 @@ public static class JobEndpoints
             return Results.Created($"/api/jobs/{result.Job!.Id}", result.Job);
         });
 
+        group.MapPost("/{jobId:guid}/match-score", async (
+            Guid jobId,
+            JobMatchScoreRequest request,
+            IJobService jobService,
+            CancellationToken cancellationToken = default) =>
+        {
+            if (string.IsNullOrWhiteSpace(request.CandidateSkills))
+            {
+                return Results.BadRequest(new { message = "CandidateSkills is required for scoring." });
+            }
+
+            var score = await jobService.GetJobMatchScoreAsync(jobId, request, cancellationToken);
+            return score is null
+                ? Results.NotFound(new { message = "Job not found." })
+                : Results.Ok(score);
+        });
+
         return app;
     }
 }

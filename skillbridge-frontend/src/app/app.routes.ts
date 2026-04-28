@@ -20,6 +20,8 @@ export const routes: Routes = [
   {
     path: 'cover-letter',
     loadComponent: () => import('./features/cover-letter/cover-letter.component').then(m => m.CoverLetterComponent)
+    path: 'mentors',
+    loadComponent: () => import('./features/mentor-profiles/mentor-profiles.component').then(m => m.MentorProfilesComponent)
   },
   {
     path: '**',

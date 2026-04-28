@@ -2,9 +2,15 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { CreateJobRequest, Job } from '../models/job.model';
+import { CreateJobRequest, Job, JobMatchScoreRequest, JobMatchScoreResponse } from '../models/job.model';
 import { HealthStatus } from '../models/health.model';
-import { CandidateRegistrationRequest, UserProfile } from '../models/user.model';
+import {
+  CandidateRegistrationRequest,
+  MentorConnection,
+  MentorConnectionRequest,
+  UserProfile,
+  UserRegistrationRequest
+} from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -29,7 +35,29 @@ export class ApiService {
     return this.http.post<Job>(`${this.baseUrl}/jobs`, payload);
   }
 
+  getJobMatchScore(jobId: string, payload: JobMatchScoreRequest): Observable<JobMatchScoreResponse> {
+    return this.http.post<JobMatchScoreResponse>(`${this.baseUrl}/jobs/${jobId}/match-score`, payload);
+  }
+
   registerCandidate(payload: CandidateRegistrationRequest): Observable<UserProfile> {
     return this.http.post<UserProfile>(`${this.baseUrl}/users`, payload);
+  }
+
+  registerUser(payload: UserRegistrationRequest): Observable<UserProfile> {
+    return this.http.post<UserProfile>(`${this.baseUrl}/users`, payload);
+  }
+
+  getMentors(): Observable<UserProfile[]> {
+    return this.http.get<UserProfile[]>(`${this.baseUrl}/users/mentors`);
+  }
+
+  createMentorConnectionRequest(payload: MentorConnectionRequest): Observable<MentorConnection> {
+    return this.http.post<MentorConnection>(`${this.baseUrl}/mentor-connections`, payload);
+  }
+
+  getMenteeConnectionRequests(menteeEmail: string): Observable<MentorConnection[]> {
+    return this.http.get<MentorConnection[]>(`${this.baseUrl}/mentor-connections/mentee`, {
+      params: { menteeEmail }
+    });
   }
 }

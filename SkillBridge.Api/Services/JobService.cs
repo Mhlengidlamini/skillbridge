@@ -93,6 +93,76 @@ public sealed class JobService(AppDbContext db) : IJobService
         return (true, null, created);
     }
 
+    public async Task<JobMatchScoreResponse?> GetJobMatchScoreAsync(Guid jobId, JobMatchScoreRequest request, CancellationToken cancellationToken = default)
+    {
+        var job = await db.Jobs
+            .AsNoTracking()
+            .Where(x => x.Id == jobId)
+            .Select(x => new
+            {
+                x.Id,
+                x.Title,
+                x.Description,
+                x.Type,
+                x.Location,
+                x.IsRemote
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (job is null)
+        {
+            return null;
+        }
+
+        var score = 30;
+        var signals = new List<string>();
+
+        var candidateSkills = Tokenize(request.CandidateSkills);
+        var targetRole = request.TargetRole?.Trim().ToLowerInvariant();
+        var preferredLocation = request.PreferredLocation?.Trim().ToLowerInvariant();
+        var jobText = $"{job.Title} {job.Description} {job.Type}".ToLowerInvariant();
+
+        if (candidateSkills.Count > 0)
+        {
+            var matchedSkills = candidateSkills.Count(skill => jobText.Contains(skill, StringComparison.Ordinal));
+            if (matchedSkills > 0)
+            {
+                score += Math.Min(45, matchedSkills * 9);
+                signals.Add($"{matchedSkills} skill keyword match(es)");
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(targetRole) &&
+            (job.Title.Contains(targetRole, StringComparison.OrdinalIgnoreCase) ||
+             job.Description.Contains(targetRole, StringComparison.OrdinalIgnoreCase)))
+        {
+            score += 15;
+            signals.Add("role alignment");
+        }
+
+        if (!string.IsNullOrWhiteSpace(preferredLocation))
+        {
+            if (job.IsRemote || (job.Location?.Contains(preferredLocation, StringComparison.OrdinalIgnoreCase) ?? false))
+            {
+                score += 10;
+                signals.Add("location preference fit");
+            }
+        }
+
+        score = Math.Clamp(score, 0, 100);
+
+        var summary = signals.Count == 0
+            ? "Low alignment detected. Add more candidate skills for better scoring."
+            : $"Match driven by {string.Join(", ", signals)}.";
+
+        return new JobMatchScoreResponse
+        {
+            JobId = job.Id,
+            Score = score,
+            Summary = summary
+        };
+    }
+
     private static System.Linq.Expressions.Expression<Func<Job, JobResponse>> MapToResponse() => x => new JobResponse
     {
         Id = x.Id,
@@ -107,4 +177,13 @@ public sealed class JobService(AppDbContext db) : IJobService
         IsActive = x.IsActive,
         CreatedAt = x.CreatedAt
     };
+
+    private static HashSet<string> Tokenize(string value)
+    {
+        return value
+            .Split([',', ';', '\n'], StringSplitOptions.RemoveEmptyEntries)
+            .Select(x => x.Trim().ToLowerInvariant())
+            .Where(x => x.Length > 1)
+            .ToHashSet();
+    }
 }

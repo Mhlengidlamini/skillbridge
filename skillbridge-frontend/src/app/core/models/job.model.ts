@@ -21,3 +21,15 @@ export interface CreateJobRequest {
   location?: string;
   isRemote: boolean;
 }
+
+export interface JobMatchScoreRequest {
+  candidateSkills: string;
+  targetRole?: string;
+  preferredLocation?: string;
+}
+
+export interface JobMatchScoreResponse {
+  jobId: string;
+  score: number;
+  summary: string;
+}
