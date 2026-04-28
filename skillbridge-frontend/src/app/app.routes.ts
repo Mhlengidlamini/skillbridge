@@ -18,6 +18,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/cv-builder/cv-builder.component').then(m => m.CvBuilderComponent)
   },
   {
+    path: 'cover-letter',
+    loadComponent: () => import('./features/cover-letter/cover-letter.component').then(m => m.CoverLetterComponent)
+  },
+  {
     path: '**',
     redirectTo: ''
   }

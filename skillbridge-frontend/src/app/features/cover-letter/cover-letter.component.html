@@ -1,0 +1,96 @@
+<main class="page">
+  <header class="hero panel-3d">
+    <div>
+      <p class="eyebrow">SB-012</p>
+      <h1>AI Cover Letter Generator</h1>
+      <p class="subtitle">Generate a tailored cover letter for a selected job.</p>
+    </div>
+    <a routerLink="/" class="back-link">Back to Home</a>
+  </header>
+
+  <section class="layout">
+    <article class="panel-3d card form-card">
+      <div class="section-head">
+        <h2>Letter Inputs</h2>
+        <button type="button" class="ghost" (click)="loadJobs()">Refresh Jobs</button>
+      </div>
+
+      @if (loadingJobs()) {
+        <p class="muted">Loading jobs...</p>
+      } @else {
+        <label>
+          Select job
+          <select [(ngModel)]="form.selectedJobId">
+            @for (job of jobs(); track job.id) {
+              <option [value]="job.id">{{ job.title }} - {{ job.employerName }}</option>
+            }
+          </select>
+        </label>
+      }
+
+      <label>
+        Full name
+        <input [(ngModel)]="form.candidateName" placeholder="Nomsa Dlamini" />
+      </label>
+
+      <label>
+        Email
+        <input [(ngModel)]="form.candidateEmail" placeholder="nomsa@email.com" />
+      </label>
+
+      <label>
+        Phone
+        <input [(ngModel)]="form.candidatePhone" placeholder="+27 71 234 5678" />
+      </label>
+
+      <label>
+        Core strengths (comma separated)
+        <input [(ngModel)]="form.strengths" placeholder="Angular, communication, testing" />
+      </label>
+
+      <label>
+        Key achievements (comma separated)
+        <input [(ngModel)]="form.achievements" placeholder="improved load time by 30%, built production API integration" />
+      </label>
+
+      <label>
+        Why this role?
+        <textarea [(ngModel)]="form.motivation" rows="4" placeholder="I admire your focus on youth impact and practical innovation."></textarea>
+      </label>
+
+      <button type="button" (click)="generateLetter()" [disabled]="generating() || loadingJobs()">
+        {{ generating() ? 'Generating...' : 'Generate Cover Letter' }}
+      </button>
+
+      @if (error()) {
+        <p class="error">{{ error() }}</p>
+      }
+    </article>
+
+    <article class="panel-3d card preview-card">
+      <div class="section-head">
+        <h2>Generated Letter</h2>
+        <button type="button" class="ghost" (click)="copyLetter()" [disabled]="!generatedLetter()">
+          Copy Letter
+        </button>
+      </div>
+
+      @if (!generatedLetter()) {
+        <p class="muted">Your generated letter will appear here.</p>
+      } @else {
+        <section class="letter-sheet">
+          @if (selectedJob()) {
+            <p class="job-meta">
+              For: <strong>{{ selectedJob()!.title }}</strong> at <strong>{{ selectedJob()!.employerName }}</strong>
+            </p>
+          }
+          <pre>{{ generatedLetter() }}</pre>
+        </section>
+      }
+
+      @if (copied()) {
+        <p class="success">Copied to clipboard.</p>
+      }
+    </article>
+  </section>
+</main>
