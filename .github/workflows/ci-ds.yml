@@ -1,0 +1,63 @@
+name: CI DS artifacts
+
+on:
+  push:
+    branches:
+      - DEV
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restore
+        run: dotnet restore SkillBridge.sln
+
+      - name: Build
+        run: dotnet build SkillBridge.Api/SkillBridge.Api.csproj -c Release --no-restore
+
+      - name: Publish
+        run: dotnet publish SkillBridge.Api/SkillBridge.Api.csproj -c Release -o ./publish/api --no-build
+
+      - name: Upload API artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: skillbridge-api-ds
+          path: ./publish/api
+
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: skillbridge-frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: skillbridge-frontend
+        run: npm ci
+
+      - name: Build
+        working-directory: skillbridge-frontend
+        run: npm run build
+
+      # angular.json has no outputPath; @angular/build:application defaults to dist/<projectName>
+      - name: Upload frontend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: skillbridge-frontend-ds
+          path: skillbridge-frontend/dist/
